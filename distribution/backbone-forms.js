@@ -75,6 +75,7 @@ var Form = Backbone.View.extend({
     //Override defaults
     var constructor = this.constructor;
     this.template = options.template || this.template || constructor.template;
+    this.$form = options.$form || this.$form || constructor.$form;
     this.Fieldset = options.Fieldset || this.Fieldset || constructor.Fieldset;
     this.Field = options.Field || this.Field || constructor.Field;
     this.NestedField = options.NestedField || this.NestedField || constructor.NestedField;
@@ -190,7 +191,11 @@ var Form = Backbone.View.extend({
         fields = this.fields;
 
     //Render form
-    var $form = $($.trim(this.template(_.result(this, 'templateData'))));
+    var $form;
+    if (this.$form)
+      $form = this.$form;
+    else
+      $form = $($.trim(this.template(_.result(this, 'templateData'))));
 
     //Render standalone editors
     $form.find('[data-editors]').add($form).each(function(i, el) {
