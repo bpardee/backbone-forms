@@ -307,9 +307,16 @@
       }).render();
 
       //Create main element
-      var $el = $($.trim(this.template()));
+      var $el;
+      if (this.schema.noItemTemplate) {
+        $el = this.editor.$el;
+      }
+      else {
+        //Create main element
+        $el = $($.trim(this.template(this.value)));
 
-      $el.find('[data-editor]').append(this.editor.el);
+        $el.find('[data-editor]').append(this.editor.el);
+      }
 
       //Replace the entire element so there isn't a wrapper tag
       this.setElement($el);
