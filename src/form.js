@@ -4,6 +4,12 @@
 
 var Form = Backbone.View.extend({
 
+  events: {
+    'submit': function(event) {
+      this.trigger('submit', event);
+    }
+  },
+
   /**
    * Constructor
    * 
@@ -29,14 +35,10 @@ var Form = Backbone.View.extend({
 
       //Then schema on model
       var model = options.model;
-      if (model && model.schema) {
-        return (_.isFunction(model.schema)) ? model.schema() : model.schema;
-      }
+      if (model && model.schema) return _.result(model, 'schema');
 
       //Then built-in schema
-      if (self.schema) {
-        return (_.isFunction(self.schema)) ? self.schema() : self.schema;
-      }
+      if (self.schema) return _.result(self, 'schema');
 
       //Fallback to empty schema
       return {};
@@ -65,7 +67,7 @@ var Form = Backbone.View.extend({
     }, this);
 
     //Create fieldsets
-    var fieldsetSchema = options.fieldsets || [selectedFields],
+    var fieldsetSchema = options.fieldsets || _.result(this, 'fieldsets') || [selectedFields],
         fieldsets = this.fieldsets = [];
 
     _.each(fieldsetSchema, function(itemSchema) {
@@ -161,7 +163,8 @@ var Form = Backbone.View.extend({
 
   render: function() {
     var self = this,
-        fields = this.fields;
+        fields = this.fields,
+        $ = Backbone.$;
 
     //Render form
     var $form;
