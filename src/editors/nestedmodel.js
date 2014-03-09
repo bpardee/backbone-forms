@@ -11,15 +11,20 @@ Form.editors.NestedModel = Form.editors.Object.extend({
     Form.editors.Base.prototype.initialize.call(this, options);
 
     if (!this.form) throw new Error('Missing required option "form"');
+    if (!options.schema.model) throw new Error('Missing required "schema.model" option for NestedModel editor');
+
+    this._setValue(null);
   },
 
-  render: function() {
+  _setValue: function(value) {
+    Form.editors.Base.prototype.setValue.call(this, value);
+
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
     var NestedForm = this.form.constructor;
 
-    var self = this,
-        data = this.value || {},
-        key = this.key;
+    var data = value || {},
+        key = this.key,
+        nestedModel = this.schema.model;
 
     // TODO: This works for me as my nested models are never null but what about Backbone.Relational or other implementations?
     //Wrap the data in a model if it isn't already a model instance
@@ -36,7 +41,9 @@ Form.editors.NestedModel = Form.editors.Object.extend({
     this.nestedForm = new NestedForm(attrs);
 
     this._observeFormEvents();
+  },
 
+  render: function() {
     //Render form
     this.$el.html(this.nestedForm.render().el);
 
