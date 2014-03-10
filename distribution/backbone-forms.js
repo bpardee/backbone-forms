@@ -1983,11 +1983,11 @@ Form.editors.Object = Form.editors.Base.extend({
   hasNestedForm: true,
 
   initialize: function(options) {
-    //Set default value for the instance so it's not a shared object
-    this._setValue({});
-
     //Init
     Form.editors.Base.prototype.initialize.call(this, options);
+
+    //Set default value for the instance so it's not a shared object
+    this._setValue(this.value || {});
 
     //Check required options
     if (!this.form) throw new Error('Missing required option "form"');
@@ -2081,7 +2081,7 @@ Form.editors.NestedModel = Form.editors.Object.extend({
 
     if (!this.form) throw new Error('Missing required option "form"');
 
-    this._setValue(null);
+    this._setValue(this.value);
   },
 
   _setValue: function(value) {
