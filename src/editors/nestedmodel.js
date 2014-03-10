@@ -12,7 +12,7 @@ Form.editors.NestedModel = Form.editors.Object.extend({
 
     if (!this.form) throw new Error('Missing required option "form"');
 
-    this._setValue(null);
+    this._setValue(this.value);
   },
 
   _setValue: function(value) {
